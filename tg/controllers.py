@@ -379,6 +379,17 @@ class Controller:
         fun = mime_map.get(mime, self.tg.send_doc)
         fun(file_path, chat_id)
 
+    @bind(msg_handler, ["sf"])
+    def send_f(self)-> None:
+        if chat_id := self.model.chats.id_by_index(self.model.current_chat):
+            send_file_fun=self.tg.send_doc
+            dir_path='' #todo use input
+            for filename in os.listdir(dir_path):
+                file_path =os.path.join(dir_path, filename)
+                send_file_fun(file_path, chat_id)
+                self.present_info(f"File {file_path} sent")
+            self.present_info(f"Folder {dir_path} sent")
+
     @bind(msg_handler, ["sd"])
     def send_document(self) -> None:
         """Enter file path and send uncompressed"""
